@@ -54,7 +54,6 @@ int main()
 				sf::Vector2i mm = sf::Mouse::getPosition(window);
 				sf::Vector2u windowSize = window.getSize();
 
-
 				if (withinDelta(mm.x, 0, 32))
 				{
 					cameraSpeed.x = -1;
@@ -85,14 +84,20 @@ int main()
 			{
 				sf::View newView = window.getView();
 				sf::Vector2f size = newView.getSize();
-				int w, h;
-				w = size.x / gcd(size.x, size.y) * 10;
-				h = size.y / gcd(size.x, size.y) * 10;
-
 				float delta = windowEvent.mouseWheelScroll.delta;
-				newView.setSize(size.x + w * sgn(delta), size.y + h * sgn(delta));
 
-				window.setView(newView);
+				if ((newView.getSize().x > 320 && sgn(delta) == -1) || sgn(delta) != -1)
+				{
+
+					int w, h;
+					w = size.x / gcd(size.x, size.y) * 10;
+					h = size.y / gcd(size.x, size.y) * 10;
+
+
+					newView.setSize(size.x + w * sgn(delta), size.y + h * sgn(delta));
+
+					window.setView(newView);
+				}
 			}
 		}
 
