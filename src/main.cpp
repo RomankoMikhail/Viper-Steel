@@ -2,9 +2,15 @@
 #include <plog/Log.h>
 #include <plog/Appenders/ConsoleAppender.h>
 
-// Standard C++ Library
+// Standard C++ library
 #include <iostream>
 
+// SFML library
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+
+#include "GridDrawer.h"
+#include "Templates.hpp"
 
 int main()
 {
@@ -12,9 +18,94 @@ int main()
 	static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
 	plog::init(plog::debug, "log.txt").addAppender(&consoleAppender);
 
-	// Main code begins here
 	LOG_INFO << "Application started";
+	// Main code begins here
 
+	sf::Texture gridTexture;
+	if (!gridTexture.loadFromFile("imgs/grid.png"))
+	{
+		LOGE << "Texture file not loaded";
+		return 0;
+	}
+	gridTexture.setSmooth(true);
+
+	Game::GridDrawer grid(gridTexture, sf::Vector2u(16, 16));
+
+	sf::ContextSettings settings;
+	settings.antialiasingLevel = 4;
+
+	sf::RenderWindow window(sf::VideoMode(800, 600), "Viper Steel", sf::Style::Default, settings);
+	window.setVerticalSyncEnabled(true);
+
+	sf::Vector2f cameraSpeed;
+
+	while (window.isOpen() == true)
+	{
+		sf::Event windowEvent;
+		while (window.pollEvent(windowEvent))
+		{
+			if (windowEvent.type == sf::Event::Closed)
+			{
+				window.close();
+			}
+			if (windowEvent.type == sf::Event::MouseMoved)
+			{
+
+				sf::Vector2i mm = sf::Mouse::getPosition(window);
+				sf::Vector2u windowSize = window.getSize();
+
+
+				if (withinDelta(mm.x, 0, 32))
+				{
+					cameraSpeed.x = -1;
+				}
+				else if (withinDelta(mm.x, windowSize.x, 32))
+				{
+					cameraSpeed.x = 1;
+				}
+				else
+				{
+					cameraSpeed.x = 0;
+				}
+
+				if (withinDelta(mm.y, 0, 32))
+				{
+					cameraSpeed.y = -1;
+				}
+				else if (withinDelta(mm.y, windowSize.y, 32))
+				{
+					cameraSpeed.y = 1;
+				}
+				else
+				{
+					cameraSpeed.y = 0;
+				}
+			}
+			if (windowEvent.type == sf::Event::MouseWheelScrolled)
+			{
+				sf::View newView = window.getView();
+				sf::Vector2f size = newView.getSize();
+				int w, h;
+				w = size.x / gcd(size.x, size.y) * 10;
+				h = size.y / gcd(size.x, size.y) * 10;
+
+				float delta = windowEvent.mouseWheelScroll.delta;
+				newView.setSize(size.x + w * sgn(delta), size.y + h * sgn(delta));
+
+				window.setView(newView);
+			}
+		}
+
+		sf::View newView = window.getView();
+		newView.move(cameraSpeed * 4.f);
+		window.setView(newView);
+
+		window.clear();
+		window.draw(grid);
+		window.display();
+	}
+
+	// Main code ends here
 	LOG_INFO << "Application shuting down";
 	return 0;
 }
