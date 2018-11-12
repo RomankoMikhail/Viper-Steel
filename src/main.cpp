@@ -16,8 +16,9 @@
 #include "GridDrawer.h"
 #include "Templates.hpp"
 
-int main()
-{
+#include <duktape.h>
+
+int main() {
 	// Initialize logging library for both text and console logging
 	static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
 	plog::init(plog::debug, "log.txt").addAppender(&consoleAppender);
@@ -25,9 +26,13 @@ int main()
 	LOG_INFO << "Application started";
 	// Main code begins here
 
+	duk_context *ctx = duk_create_heap_default();
+	duk_eval_string(ctx, "1+2");
+	printf("1+2=%d\n", (int) duk_get_int(ctx, -1));
+	duk_destroy_heap(ctx);
+
 	sf::Texture gridTexture;
-	if (!gridTexture.loadFromFile("imgs/grid.png"))
-	{
+	if (!gridTexture.loadFromFile("imgs/grid.png")) {
 		LOGE << "Texture file not loaded";
 		return 0;
 	}
@@ -38,67 +43,53 @@ int main()
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 4;
 
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Viper Steel", sf::Style::Default, settings);
+	sf::RenderWindow window(sf::VideoMode(800, 600), "Viper Steel",
+			sf::Style::Default, settings);
 	window.setVerticalSyncEnabled(true);
 
 	sf::Vector2f cameraSpeed;
 
-	while (window.isOpen() == true)
-	{
+	while (window.isOpen() == true) {
 		sf::Event windowEvent;
-		while (window.pollEvent(windowEvent))
-		{
-			if (windowEvent.type == sf::Event::Closed)
-			{
+		while (window.pollEvent(windowEvent)) {
+			if (windowEvent.type == sf::Event::Closed) {
 				window.close();
 			}
-			if (windowEvent.type == sf::Event::MouseMoved)
-			{
+			if (windowEvent.type == sf::Event::MouseMoved) {
 
 				sf::Vector2i mm = sf::Mouse::getPosition(window);
 				sf::Vector2u windowSize = window.getSize();
 
-				if (withinDelta(mm.x, 0, 32))
-				{
+				if (withinDelta(mm.x, 0, 32)) {
 					cameraSpeed.x = -1;
-				}
-				else if (withinDelta(mm.x, windowSize.x, 32))
-				{
+				} else if (withinDelta(mm.x, windowSize.x, 32)) {
 					cameraSpeed.x = 1;
-				}
-				else
-				{
+				} else {
 					cameraSpeed.x = 0;
 				}
 
-				if (withinDelta(mm.y, 0, 32))
-				{
+				if (withinDelta(mm.y, 0, 32)) {
 					cameraSpeed.y = -1;
-				}
-				else if (withinDelta(mm.y, windowSize.y, 32))
-				{
+				} else if (withinDelta(mm.y, windowSize.y, 32)) {
 					cameraSpeed.y = 1;
-				}
-				else
-				{
+				} else {
 					cameraSpeed.y = 0;
 				}
 			}
-			if (windowEvent.type == sf::Event::MouseWheelScrolled)
-			{
+			if (windowEvent.type == sf::Event::MouseWheelScrolled) {
 				sf::View newView = window.getView();
 				sf::Vector2f size = newView.getSize();
 				float delta = windowEvent.mouseWheelScroll.delta;
 
-				if ((newView.getSize().x > 320 && sgn(delta) == -1) || sgn(delta) != -1)
-				{
+				if ((newView.getSize().x > 320 && sgn(delta) == -1)
+						|| sgn(delta) != -1) {
 
 					int w, h;
 					w = size.x / gcd(size.x, size.y) * 10;
 					h = size.y / gcd(size.x, size.y) * 10;
 
-
-					newView.setSize(size.x + w * sgn(delta), size.y + h * sgn(delta));
+					newView.setSize(size.x + w * sgn(delta),
+							size.y + h * sgn(delta));
 
 					window.setView(newView);
 				}
