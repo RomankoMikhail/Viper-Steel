@@ -1,5 +1,9 @@
 // PLOG library
 #include <plog/Log.h>
+
+#ifdef _WIN32
+#define _fileno(F) ((F)->_file)
+#endif
 #include <plog/Appenders/ConsoleAppender.h>
 
 // Standard C++ library
