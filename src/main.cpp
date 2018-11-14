@@ -13,20 +13,23 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-#include "GridDrawer.h"
-#include "Templates.hpp"
+#include "griddrawer.h"
+#include "templates.h"
+#include "application.h"
 
 #include <duktape.h>
 
-int main() {
+int main(int argc, char* argv[]) {
 	// Initialize logging library for both text and console logging
 	static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
 	plog::init(plog::debug, "log.txt").addAppender(&consoleAppender);
 
-	LOG_INFO << "Application started";
+	game::application app(argc, argv);
+	app.run();
+
 	// Main code begins here
 
-	duk_context *ctx = duk_create_heap_default();
+	/*duk_context *ctx = duk_create_heap_default();
 	duk_eval_string(ctx, "1+2");
 	printf("1+2=%d\n", (int) duk_get_int(ctx, -1));
 	duk_destroy_heap(ctx);
@@ -38,7 +41,7 @@ int main() {
 	}
 	gridTexture.setSmooth(true);
 
-	Game::GridDrawer grid(gridTexture, sf::Vector2u(16, 16));
+	game::grid_drawer grid(gridTexture, sf::Vector2u(16, 16));
 
 	sf::ContextSettings settings;
 	settings.antialiasingLevel = 4;
@@ -62,7 +65,7 @@ int main() {
 
 				if (withinDelta(mm.x, 0, 32)) {
 					cameraSpeed.x = -1;
-				} else if (withinDelta(mm.x, windowSize.x, 32)) {
+				} else if (withinDelta(mm.x, int(windowSize.x), 32)) {
 					cameraSpeed.x = 1;
 				} else {
 					cameraSpeed.x = 0;
@@ -70,7 +73,7 @@ int main() {
 
 				if (withinDelta(mm.y, 0, 32)) {
 					cameraSpeed.y = -1;
-				} else if (withinDelta(mm.y, windowSize.y, 32)) {
+				} else if (withinDelta(mm.y, int(windowSize.y), 32)) {
 					cameraSpeed.y = 1;
 				} else {
 					cameraSpeed.y = 0;
@@ -103,9 +106,9 @@ int main() {
 		window.clear();
 		window.draw(grid);
 		window.display();
-	}
+	}*/
 
 	// Main code ends here
-	LOG_INFO << "Application shuting down";
+	//LOG_INFO << "Application shuting down";
 	return 0;
 }
