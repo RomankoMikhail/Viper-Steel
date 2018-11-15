@@ -8,7 +8,7 @@
 #include <memory>
 #include <vector>
 
-const int max_threads = 4;
+const int max_threads = 5;
 
 void thread_pool_add(std::shared_ptr<game::thread> thread, sf::Time time = sf::Time::Zero);
 int thread_pool_process();

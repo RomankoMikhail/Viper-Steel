@@ -2,6 +2,7 @@
 
 namespace game
 {
+/*
 void thread::terminate()
 {
 	m_thread.terminate();
@@ -34,6 +35,8 @@ const bool& thread::is_terminated()
 thread::~thread()
 {
 	terminate();
+	LOG_INFO << "Thread terminated";
 }
+*/
 } /* namespace game */
 

@@ -21,6 +21,12 @@ static duk_ret_t native_log(duk_context* ctx)
 	return 0;
 }
 
+static duk_ret_t native_sleep(duk_context* ctx)
+{
+	sf::sleep(sf::milliseconds(duk_to_int(ctx, 0)));
+	return 0;
+}
+
 static duk_ret_t move_ship(duk_context* ctx)
 {
 	if (duk_get_global_literal(ctx, DUK_HIDDEN_SYMBOL("ID")) == false)
@@ -29,7 +35,7 @@ static duk_ret_t move_ship(duk_context* ctx)
 		LOG_ERROR << "Non-ID ES called";
 		throw std::runtime_error("Non-ID ES called");
 	}
-	unsigned id = duk_to_int(ctx, 1);
+	unsigned id = duk_to_int(ctx, 2);
 	duk_pop(ctx);
 
 	if (ships.find(id) == ships.end())
@@ -56,6 +62,9 @@ void js_setup_context(duk_context* ctx, const unsigned& id)
 
 	duk_push_c_function(ctx, native_log, 1);
 	duk_put_global_string(ctx, "log");
+
+	duk_push_c_function(ctx, native_sleep, 1);
+	duk_put_global_string(ctx, "sleep");
 
 	duk_push_c_function(ctx, move_ship, 2);
 	duk_put_global_string(ctx, "move");

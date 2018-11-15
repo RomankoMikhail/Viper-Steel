@@ -15,6 +15,7 @@ class application
 	std::vector<std::string> m_args;
 	std::map<sf::String, sf::Texture> m_textures;
 	sf::RenderWindow m_window;
+	void update();
 public:
 	/*!
 	 * \brief Application starts working from here

@@ -22,6 +22,8 @@
 #include "thread.h"
 #include "thread_pool.h"
 
+#include "global_objects.h"
+
 class testA
 {
 public:
@@ -37,6 +39,11 @@ int main(int argc, char* argv[])
 	plog::init(plog::debug, "log.txt").addAppender(&consoleAppender);
 
 	game::thread_ptr app_thread(new game::thread([&argc, &argv](){game::application app(argc, argv);app.run();}));
+
+	textures["debug_16"].loadFromFile("images/debug_16.png");
+	textures["debug_32"].loadFromFile("images/debug_32.png");
+	textures["debug_64"].loadFromFile("images/debug_64.png");
+	textures["debug_128"].loadFromFile("images/debug_128.png");
 
 	thread_pool_add(app_thread);
 	while(thread_pool_process())

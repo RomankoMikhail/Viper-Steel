@@ -45,6 +45,8 @@ int thread_pool_process()
 
 	sf::Time delta = threads_clock.restart();
 
+	threads.shrink_to_fit();
+
 	auto t = std::begin(threads);
 
 	while (t != std::end(threads))
@@ -59,6 +61,7 @@ int thread_pool_process()
 				LOG_INFO << "Thread #" << t - std::begin(threads) << " terminated by time";
 			else
 				LOG_INFO << "Thread #" << t - std::begin(threads) << " ended";
+
 			t = threads.erase(t);
 			continue;
 		}
