@@ -3,6 +3,9 @@
 #include "global_objects.h"
 #include "js_methods.h"
 
+#include "thread.h"
+#include "thread_pool.h"
+
 namespace game
 {
 
@@ -13,14 +16,7 @@ void application::run()
 		LOG_DEBUG << str;
 	}
 
-
-	duk_context* ctx = duk_create_heap_default();
-
-	js_setup_context(ctx, 101);
-	ships[1] = ship(20);
-	duk_eval_string(ctx, "log('Hello from ' + 1 + ' :3 ');move(-1, 1);");
-
-	duk_destroy_heap(ctx);
+	ships[101] = std::shared_ptr<ship>(new ship(101));
 
 	while(m_window.isOpen())
 	{
@@ -37,6 +33,12 @@ void application::run()
 				break;
 			}
 		}
+
+		//auto update_function = std::bind(&game::ship::update, &ships[101]);
+		thread_ptr thread(new game::thread(&game::ship::update, ships[101].get()));
+		thread_pool_add(thread, sf::seconds(5));
+		//thread->wait();
+
 
 		m_window.clear();
 		m_window.display();

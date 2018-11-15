@@ -12,6 +12,8 @@ class ship
 	duk_context* m_ctx = NULL;
 	bool m_acted = false;
 	sf::Vector2i m_position;
+	//const unsigned m_id = -1;
+
 public:
 	void move(sf::Vector2i movement);
 	void set_position(sf::Vector2i position);
@@ -22,7 +24,6 @@ public:
 
 	void update();
 
-	ship() = default;
 	ship(const unsigned& id);
 	~ship();
 };

@@ -4,8 +4,9 @@
 #include <map>
 
 #include "ship.h"
+#include <memory>
 
-extern std::map<unsigned, game::ship> ships;
+extern std::map<unsigned, std::shared_ptr<game::ship>> ships;
 
 
 #endif /* GLOBAL_OBJECTS_H_ */
