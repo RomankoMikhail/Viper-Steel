@@ -13,102 +13,69 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-#include "griddrawer.h"
+#include "grid_drawer.h"
 #include "templates.h"
 #include "application.h"
 
 #include <duktape.h>
 
-int main(int argc, char* argv[]) {
+#include "thread.h"
+
+#include <array>
+
+#include "thread_pool.h"
+
+int main(int argc, char* argv[])
+{
 	// Initialize logging library for both text and console logging
 	static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
 	plog::init(plog::debug, "log.txt").addAppender(&consoleAppender);
 
-	game::application app(argc, argv);
-	app.run();
+	std::shared_ptr<game::thread> task1(new game::thread([]()
+	{
+		LOG_WARNING << "Hello from thread #1";
+		std::shared_ptr<game::thread> task2(new game::thread([]()
+		{
+			LOG_WARNING << "Hello from thread #2";
+			for(int t = 0; t < 10; t++)
+			{
 
-	// Main code begins here
-
-	/*duk_context *ctx = duk_create_heap_default();
-	duk_eval_string(ctx, "1+2");
-	printf("1+2=%d\n", (int) duk_get_int(ctx, -1));
-	duk_destroy_heap(ctx);
-
-	sf::Texture gridTexture;
-	if (!gridTexture.loadFromFile("imgs/grid.png")) {
-		LOGE << "Texture file not loaded";
-		return 0;
-	}
-	gridTexture.setSmooth(true);
-
-	game::grid_drawer grid(gridTexture, sf::Vector2u(16, 16));
-
-	sf::ContextSettings settings;
-	settings.antialiasingLevel = 4;
-
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Viper Steel",
-			sf::Style::Default, settings);
-	window.setVerticalSyncEnabled(true);
-
-	sf::Vector2f cameraSpeed;
-
-	while (window.isOpen() == true) {
-		sf::Event windowEvent;
-		while (window.pollEvent(windowEvent)) {
-			if (windowEvent.type == sf::Event::Closed) {
-				window.close();
+				sf::sleep(sf::milliseconds(100));
 			}
-			if (windowEvent.type == sf::Event::MouseMoved) {
+			LOG_WARNING << "Bye from thread #2";
+		}));
 
-				sf::Vector2i mm = sf::Mouse::getPosition(window);
-				sf::Vector2u windowSize = window.getSize();
+		thread_pool_add(task2);
 
-				if (withinDelta(mm.x, 0, 32)) {
-					cameraSpeed.x = -1;
-				} else if (withinDelta(mm.x, int(windowSize.x), 32)) {
-					cameraSpeed.x = 1;
-				} else {
-					cameraSpeed.x = 0;
-				}
+		for(int i = 0; i < 10; i++)
+		{
 
-				if (withinDelta(mm.y, 0, 32)) {
-					cameraSpeed.y = -1;
-				} else if (withinDelta(mm.y, int(windowSize.y), 32)) {
-					cameraSpeed.y = 1;
-				} else {
-					cameraSpeed.y = 0;
-				}
-			}
-			if (windowEvent.type == sf::Event::MouseWheelScrolled) {
-				sf::View newView = window.getView();
-				sf::Vector2f size = newView.getSize();
-				float delta = windowEvent.mouseWheelScroll.delta;
+			sf::sleep(sf::milliseconds(500));
 
-				if ((newView.getSize().x > 320 && sgn(delta) == -1)
-						|| sgn(delta) != -1) {
-
-					int w, h;
-					w = size.x / gcd(size.x, size.y) * 10;
-					h = size.y / gcd(size.x, size.y) * 10;
-
-					newView.setSize(size.x + w * sgn(delta),
-							size.y + h * sgn(delta));
-
-					window.setView(newView);
-				}
-			}
 		}
 
-		sf::View newView = window.getView();
-		newView.move(cameraSpeed * 4.f);
-		window.setView(newView);
+		std::shared_ptr<game::thread> task3(new game::thread([]()
+		{
+			LOG_WARNING << "Hello from thread #3";
+			for(int t = 0; t < 10; t++)
+			{
+				sf::sleep(sf::milliseconds(100));
+			}
+			LOG_WARNING << "Bye from thread #3";
+		}));
+		thread_pool_add(task3);
+		LOG_WARNING << "Bye from thread #1";
+	}));
 
-		window.clear();
-		window.draw(grid);
-		window.display();
-	}*/
+	thread_pool_add(task1, sf::seconds(10));
 
-	// Main code ends here
-	//LOG_INFO << "Application shuting down";
+	while (thread_pool_process())
+	{
+		sf::sleep(sf::milliseconds(10));
+	}
+
+	//game::application app(argc, argv);
+	//app.run();
+
 	return 0;
 }

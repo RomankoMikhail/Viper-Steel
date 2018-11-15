@@ -20,6 +20,8 @@ public:
 	void set_acted();
 	void reset_acted();
 
+	void update();
+
 	ship() = default;
 	ship(const unsigned& id);
 	~ship();

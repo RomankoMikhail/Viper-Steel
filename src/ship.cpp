@@ -1,5 +1,6 @@
 #include "ship.h"
-#include "jsmethods.h"
+
+#include "js_methods.h"
 #include "templates.h"
 
 namespace game
@@ -40,11 +41,17 @@ ship::ship(const unsigned& id)
 {
 	m_ctx = duk_create_heap_default();
 
-	setup_js_context(m_ctx, id);
+	js_setup_context(m_ctx, id);
+}
+
+void ship::update()
+{
+
 }
 
 ship::~ship()
 {
+	duk_destroy_heap(m_ctx);
 }
 
 } /* namespace game */

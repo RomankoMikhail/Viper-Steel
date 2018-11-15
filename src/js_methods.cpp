@@ -1,8 +1,9 @@
+#include "js_methods.h"
+
 #include <string>
 
-#include "jsmethods.h"
-#include "globalobjects.h"
 #include "application.h"
+#include "global_objects.h"
 
 static duk_ret_t native_log(duk_context* ctx)
 {
@@ -47,7 +48,7 @@ static duk_ret_t move_ship(duk_context* ctx)
 	return 0;
 }
 
-void setup_js_context(duk_context* ctx, const unsigned& id)
+void js_setup_context(duk_context* ctx, const unsigned& id)
 {
 	duk_push_global_object(ctx);
 	duk_push_string(ctx, std::to_string(id).c_str());

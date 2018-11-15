@@ -1,5 +1,5 @@
-#ifndef GRIDDRAWER_H_
-#define GRIDDRAWER_H_
+#ifndef GRID_DRAWER_H_
+#define GRID_DRAWER_H_
 
 #include <SFML/Graphics.hpp>
 
@@ -35,4 +35,4 @@ public:
 
 } /* namespace game */
 
-#endif /* GRIDDRAWER_H_ */
+#endif /* GRID_DRAWER_H_ */

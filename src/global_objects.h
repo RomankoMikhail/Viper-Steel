@@ -1,5 +1,5 @@
-#ifndef GLOBALOBJECTS_H_
-#define GLOBALOBJECTS_H_
+#ifndef GLOBAL_OBJECTS_H_
+#define GLOBAL_OBJECTS_H_
 
 #include <map>
 
@@ -8,4 +8,4 @@
 extern std::map<unsigned, game::ship> ships;
 
 
-#endif /* GLOBALOBJECTS_H_ */
+#endif /* GLOBAL_OBJECTS_H_ */

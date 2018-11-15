@@ -1,6 +1,7 @@
+#include "grid_drawer.h"
+
 #include <plog/Log.h>
 
-#include "griddrawer.h"
 
 namespace game {
 grid_drawer::grid_drawer(const sf::Texture& texture, const sf::Vector2u size) :

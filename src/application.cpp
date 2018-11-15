@@ -1,6 +1,7 @@
 #include "application.h"
-#include "jsmethods.h"
-#include "globalobjects.h"
+
+#include "global_objects.h"
+#include "js_methods.h"
 
 namespace game
 {
@@ -15,7 +16,7 @@ void application::run()
 
 	duk_context* ctx = duk_create_heap_default();
 
-	setup_js_context(ctx, 101);
+	js_setup_context(ctx, 101);
 	ships[1] = ship(20);
 	duk_eval_string(ctx, "log('Hello from ' + 1 + ' :3 ');move(-1, 1);");
 
