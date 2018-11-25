@@ -7,10 +7,17 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
-namespace game
+namespace Game
 {
 
-class application
+/*!
+ * \brief Class representing main application
+ * \ingroup core
+ *
+ * \details Game::Application is a class, that contain variables related to
+ * application such as video resolution, audio level settings and etc.
+ */
+class Application
 {
 	std::vector<std::string> m_args;
 	std::map<sf::String, sf::Texture> m_textures;
@@ -25,22 +32,14 @@ public:
 	/*!
 	 * \brief game::application constructor.
 	 *
-	 * @param argc number of arguments
-	 * @param argv the arguments
+	 * \param argc number of arguments
+	 * \param argv the arguments
 	 */
-	explicit application(int argc, char* argv[]);
-	~application();
+	explicit Application(int argc, char* argv[]);
+	~Application();
 };
-/*!
- * \class game::application
- * \ingroup core
- *
- * game::application is a class, that contains variables related to
- * application such as video resolution, audio level settings and etc.
- *
- */
 
-} /* namespace game */
+} /* namespace Game */
 
 
 

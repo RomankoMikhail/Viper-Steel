@@ -16,40 +16,64 @@
 #include <duktape.h>
 #include <array>
 
-#include "grid_drawer.h"
-#include "templates.h"
-#include "application.h"
-#include "thread.h"
-#include "thread_pool.h"
+#include "GridDrawer.h"
+#include "Templates.h"
+#include "Application.h"
 
-#include "global_objects.h"
+#include "Script.h"
 
-class testA
+#include "GlobalObjects.h"
+
+static duk_ret_t native_log(duk_context* ctx)
 {
-public:
-	void call()
+	if (duk_get_global_literal(ctx, DUK_HIDDEN_SYMBOL("ID")) == false)
 	{
-		LOG_INFO << "Call";
+		duk_pop(ctx);
+		LOG_ERROR << "Script with no ID called";
+		throw std::runtime_error("Script with no ID called");
 	}
-};
+	unsigned id = duk_to_int(ctx, 1);
+	duk_pop(ctx);
+
+	LOG_DEBUG << "(id:" << id << "):" << duk_to_string(ctx, 0);
+
+	return 0;
+}
 
 int main(int argc, char* argv[])
 {
+
+	char* ptr = nullptr;
+
 	static plog::ConsoleAppender<plog::TxtFormatter> consoleAppender;
 	plog::init(plog::debug, "log.txt").addAppender(&consoleAppender);
 
-	game::thread_ptr app_thread(new game::thread([&argc, &argv](){game::application app(argc, argv);app.run();}));
+	Game::Script myScript;
+	myScript.bindFunction(native_log, "print", 1);
+	myScript.setProperty("ID", "1");
+	LOG_INFO << myScript.getProperty("ID");
+	myScript.loadSrc("print('program code'); function updater() {print('updater function');}");
+	//myScript.call("updater");
+
+	double d1 = 0.1 + 0.2;
+	double d2 = 0.3;
+
+	if(d1 != d2) {
+		LOG_WARNING << "d1 != d2";
+		LOG_WARNING << d1;
+		LOG_WARNING << d2;
+	}
+	LOG_WARNING << approx(d1, d2, 1);
+	return 0;
+
+	LOG_DEBUG << ptr;
+	ptr = NULL;
+	LOG_DEBUG << ptr;
 
 	textures["debug_16"].loadFromFile("images/debug_16.png");
 	textures["debug_32"].loadFromFile("images/debug_32.png");
 	textures["debug_64"].loadFromFile("images/debug_64.png");
 	textures["debug_128"].loadFromFile("images/debug_128.png");
-
-	thread_pool_add(app_thread);
-	while(thread_pool_process())
-	{
-		sf::sleep(sf::milliseconds(10));
-	}
 
 	return 0;
 }

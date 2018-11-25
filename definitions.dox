@@ -1,0 +1,12 @@
+/*!
+ * \mainpage
+ * Documentation you want to occur on the main page.
+ *
+ * \defgroup core Core
+ * \brief Core classes and functions. 
+ * \defgroup math Math
+ * \brief Math classes and functions. 
+ * \defgroup scripting Scripting 
+ * \brief Class and function that are used in scripting
+ */
+

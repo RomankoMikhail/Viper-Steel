@@ -1,10 +1,10 @@
-#include "grid_drawer.h"
+#include "GridDrawer.h"
 
 #include <plog/Log.h>
 
 
-namespace game {
-grid_drawer::grid_drawer(const sf::Texture& texture, const sf::Vector2u size) :
+namespace Game {
+GridDrawer::GridDrawer(const sf::Texture& texture, const sf::Vector2u size) :
 		m_texture(texture), m_size(size) {
 	m_vertices.setPrimitiveType(sf::Quads);
 	m_vertices.resize(size.x * size.y * 4);
@@ -31,7 +31,7 @@ grid_drawer::grid_drawer(const sf::Texture& texture, const sf::Vector2u size) :
 	LOGD << m_texture.getSize().x << " " << m_texture.getSize().y;
 }
 
-void grid_drawer::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+void GridDrawer::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 
 	states.transform *= getTransform();
 	states.texture = &m_texture;

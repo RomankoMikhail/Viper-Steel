@@ -5,10 +5,10 @@
 #include <SFML/Graphics.hpp>
 #include <duktape.h>
 
-namespace game
+namespace Game
 {
 
-class ship: public sf::Drawable
+class Ship: public sf::Drawable
 {
 	duk_context* m_ctx = NULL;
 	bool m_acted = false;
@@ -19,16 +19,16 @@ protected:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 public:
 	void move(sf::Vector2i movement);
-	void set_position(sf::Vector2i position);
-	sf::Vector2i get_position();
+	void setPosition(sf::Vector2i position);
+	sf::Vector2i getPosition();
 
-	void set_acted();
-	void reset_acted();
+	void setActed();
+	void resetActed();
 
 	void update();
 
-	ship(const unsigned& id);
-	~ship();
+	Ship(const unsigned& id);
+	~Ship();
 };
 
 } /* namespace game */
