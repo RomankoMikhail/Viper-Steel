@@ -1,9 +1,8 @@
 #include "Ship.h"
 
 #include <plog/Log.h>
-#include "GlobalObjects.h"
-#include "JSMethods.h"
-#include "Templates.h"
+
+#include "Math.h"
 
 namespace Game
 {
@@ -12,8 +11,8 @@ void Ship::move(sf::Vector2i movement)
 {
 	if (m_acted == false)
 	{
-		movement.x = clamp(movement.x, -1, 1);
-		movement.y = clamp(movement.y, -1, 1);
+		movement.x = Math::clamp(movement.x, -1, 1);
+		movement.y = Math::clamp(movement.y, -1, 1);
 		m_position += movement;
 		m_sprite.setPosition(m_position.x * 32.0f, m_position.y * 32.0f);
 		setActed();
@@ -43,10 +42,10 @@ void Ship::resetActed()
 Ship::Ship(const unsigned& id)
 {
 	m_ctx = duk_create_heap_default();
-	JSSetupContext(m_ctx, id);
+	//JSSetupContext(m_ctx, id);
 	duk_peval_string(m_ctx, "function update() {x = Math.floor(Math.random() * 3) - 1; y = Math.floor(Math.random() * 3) - 1;move(x,y);while(1);}");
 
-	m_sprite.setTexture(textures["debug_32"]);
+	//m_sprite.setTexture(textures["debug_32"]);
 }
 
 void Ship::update()

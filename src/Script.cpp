@@ -10,7 +10,7 @@
  */
 int duk_exec_timeout(void* udata)
 {
-	Game::ScriptData* data = static_cast<Game::ScriptData*>(udata);
+	Game::Scripting::ScriptData* data = static_cast<Game::Scripting::ScriptData*>(udata);
 
 	if (data != nullptr && data->terminate)
 	{
@@ -29,7 +29,8 @@ static void scriptFatalHandler(void *udata, const char *msg)
 
 namespace Game
 {
-
+namespace Scripting
+{
 Script::Script()
 {
 	// Allocating duktape heap
@@ -105,5 +106,6 @@ Script::~Script()
 	duk_destroy_heap(m_ctx);
 }
 
+}
 } /* namespace Game */
 

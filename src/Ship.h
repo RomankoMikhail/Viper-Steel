@@ -8,7 +8,10 @@
 namespace Game
 {
 
-class Ship: public sf::Drawable
+/*!
+ * \deprecated
+ */
+class [[deprecated]] Ship: public sf::Drawable
 {
 	duk_context* m_ctx = NULL;
 	bool m_acted = false;

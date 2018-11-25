@@ -6,10 +6,14 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <SFML/System.hpp>
+
+#define UPDATE_FREQ 30
 
 namespace Game
 {
-
+namespace Core
+{
 /*!
  * \brief Class representing main application
  * \ingroup core
@@ -22,7 +26,12 @@ class Application
 	std::vector<std::string> m_args;
 	std::map<sf::String, sf::Texture> m_textures;
 	sf::RenderWindow m_window;
-	void update();
+
+	const sf::Time timePerUpdate;
+
+	void event();
+	void update(sf::Time delta);
+	void render();
 public:
 	/*!
 	 * \brief Application starts working from here
@@ -39,6 +48,7 @@ public:
 	~Application();
 };
 
+} /* namespace Core */
 } /* namespace Game */
 
 

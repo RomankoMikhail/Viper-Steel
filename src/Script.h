@@ -6,7 +6,8 @@
 
 namespace Game
 {
-
+namespace Scripting
+{
 /*!
  * \brief Structure for containing flags and other variables, that should be accessed from duktape context or callback
  */
@@ -109,6 +110,7 @@ public:
 	virtual ~Script();
 };
 
+} /* namespace Scripting */
 } /* namespace Game */
 
 #endif /* SCRIPT_H_ */
